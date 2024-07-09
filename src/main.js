@@ -1,10 +1,12 @@
 import { renderCard, refs, handlerError } from './js/render-function';
-import { fetchImage } from './js/paxabay-api';
+import { fetchImage, searchSettings } from './js/paxabay-api';
 
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
 refs.searchForm.addEventListener('submit', handlerSearchButton);
+let currentPage = 1;
+let totalPage = 1;
 
 function handlerSearchButton(event) {
   event.preventDefault();
@@ -13,23 +15,51 @@ function handlerSearchButton(event) {
     handlerError('outdata');
     return;
   }
+  searchSettings.q = searchText;
+  searchSettings.page = currentPage;
+
   refs.gallery.innerHTML = '';
   refs.loader.classList.add('loader');
-  fetchImage(searchText)
+
+  fetchImage()
     .then(image => {
       refs.loader.classList.remove('loader');
-      if (image.totalHits === 0) {
+      totalPage = Math.ceil(image.totalHits / searchSettings.per_page);
+      if (totalPage === 0) {
         handlerError('nodata');
         return;
       }
+
       refs.gallery.insertAdjacentHTML('beforeend', renderCard(image.hits));
       galleryBigImage.refresh();
+
+      if (totalPage > currentPage) {
+        pagination();
+      }
     })
     .catch(error => {
-      refs.loader.classList.remove('loader');
+      refs.loadmore.classList.remove('loader');
       handlerError(error);
     })
     .finally(refs.searchForm.reset());
+}
+function pagination() {
+  refs.loadmore.addEventListener('click', () => {
+    refs.loader.classList.add('loader');
+    currentPage += 1;
+    searchSettings.page = currentPage;
+    fetchImage()
+      .then(image => {
+        refs.loader.classList.remove('loader');
+        refs.gallery.insertAdjacentHTML('beforeend', renderCard(image.hits));
+        galleryBigImage.refresh();
+      })
+      .catch(error => {
+        refs.loadmore.classList.remove('loader');
+        handlerError(error);
+      })
+      .finally(refs.searchForm.reset());
+  });
 }
 
 const galleryBigImage = new SimpleLightbox('.gallery a', {

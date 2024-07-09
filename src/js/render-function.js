@@ -16,6 +16,7 @@ export const refs = {
   searchForm: document.querySelector('.js-search-form'),
   gallery: document.querySelector('.gallery'),
   loader: document.querySelector('.js-loader'),
+  loadmore: document.querySelector('.loadmore-button'),
 };
 
 export function renderCard(imageData) {
