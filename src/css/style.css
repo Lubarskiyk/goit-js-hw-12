@@ -2,6 +2,18 @@
 @import url('./null.css');
 @import url('./base.css');
 
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #fff;
+  width: 100%;
+}
+
+main {
+  margin-top: 65px;
+}
+
 input:focus,
 input:active {
   border-color: #000;

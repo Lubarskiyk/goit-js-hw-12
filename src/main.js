@@ -5,16 +5,21 @@ import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
 refs.searchForm.addEventListener('submit', handlerSearchButton);
-let currentPage = 1;
-let totalPage = 1;
+
+let currentPage;
+let totalPage;
 
 function handlerSearchButton(event) {
   event.preventDefault();
+  currentPage = 1;
+  totalPage = 1;
+
   const searchText = event.target.searchtext.value.trim();
   if (!searchText) {
     handlerError('outdata');
     return;
   }
+
   searchSettings.q = searchText;
   searchSettings.page = currentPage;
 
@@ -38,19 +43,18 @@ function handlerSearchButton(event) {
         pagination();
       }
     })
+
     .catch(error => {
       refs.loadmore.classList.remove('loader');
       handlerError(error);
     })
     .finally(refs.searchForm.reset());
 }
+
 function pagination() {
   refs.loadmore.addEventListener('click', () => {
     refs.loader.classList.add('loader');
-
-    console.log(currentPage);
     searchSettings.page = currentPage;
-
     fetchImage()
       .then(image => {
         refs.loader.classList.remove('loader');
@@ -76,4 +80,5 @@ const galleryBigImage = new SimpleLightbox('.gallery a', {
   overlayOpacity: 0.8,
   scrollZoom: false,
 });
+
 galleryBigImage.on('show.simplelightbox', function () {});
