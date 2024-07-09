@@ -34,6 +34,7 @@ function handlerSearchButton(event) {
       galleryBigImage.refresh();
 
       if (totalPage > currentPage) {
+        currentPage += 1;
         pagination();
       }
     })
@@ -46,8 +47,10 @@ function handlerSearchButton(event) {
 function pagination() {
   refs.loadmore.addEventListener('click', () => {
     refs.loader.classList.add('loader');
-    currentPage += 1;
+
+    console.log(currentPage);
     searchSettings.page = currentPage;
+
     fetchImage()
       .then(image => {
         refs.loader.classList.remove('loader');
@@ -57,8 +60,14 @@ function pagination() {
       .catch(error => {
         refs.loadmore.classList.remove('loader');
         handlerError(error);
-      })
-      .finally(refs.searchForm.reset());
+      });
+
+    if (totalPage === currentPage) {
+      console.log('vse');
+      return;
+    } else {
+      currentPage += 1;
+    }
   });
 }
 
