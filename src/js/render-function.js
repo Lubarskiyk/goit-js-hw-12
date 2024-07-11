@@ -3,6 +3,13 @@ import 'izitoast/dist/css/iziToast.min.css';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
+export const refs = {
+  searchForm: document.querySelector('.js-search-form'),
+  gallery: document.querySelector('.gallery'),
+  loader: document.querySelector('.js-loader'),
+  loadmore: document.querySelector('.loadmore-button'),
+};
+
 const galleryBigImage = new SimpleLightbox('.gallery a', {
   captionDelay: 250,
   overlayOpacity: 0.8,
@@ -21,13 +28,6 @@ iziToast.settings({
   messageSize: 25,
   backgroundColor: 'rgba(255, 182, 66, 0.8)',
 });
-
-export const refs = {
-  searchForm: document.querySelector('.js-search-form'),
-  gallery: document.querySelector('.gallery'),
-  loader: document.querySelector('.js-loader'),
-  loadmore: document.querySelector('.loadmore-button'),
-};
 
 function renderCard(imageData) {
   return imageData

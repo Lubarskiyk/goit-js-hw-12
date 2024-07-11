@@ -36,7 +36,6 @@ function handlerSearchButton(event) {
 
       if (totalPage > currentPage) {
         currentPage += 1;
-        //   refs.loadmore.style.setProperty('--lmb-dispay', `block`);
         loadMoreImage();
       }
     })
