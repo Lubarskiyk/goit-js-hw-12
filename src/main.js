@@ -41,7 +41,6 @@ function handlerSearchButton(event) {
     })
 
     .catch(error => {
-      refs.loadmore.classList.remove('loader');
       handlerError(error);
     })
     .finally(refs.searchForm.reset());
@@ -58,7 +57,6 @@ function loadMoreImage() {
         scrollCard();
       })
       .catch(error => {
-        refs.loader.classList.remove('loader');
         handlerError(error);
       });
 

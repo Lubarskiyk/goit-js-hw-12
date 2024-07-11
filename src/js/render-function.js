@@ -65,6 +65,7 @@ function renderCard(imageData) {
 }
 
 export function handlerError(error) {
+  refs.loader.classList.remove('loader');
   switch (error) {
     case 'outdata':
       iziToast.warning({
@@ -80,7 +81,6 @@ export function handlerError(error) {
       });
       break;
     default:
-      console.log(error);
       iziToast.error({
         title: 'Error',
         message: 'Щось пішло не так. Ми працюемо над вирішенням питання!',
