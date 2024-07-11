@@ -1,7 +1,5 @@
-import { renderCard, refs, handlerError } from './js/render-function';
+import { refs, handlerError, scrollCard, addImage } from './js/render-function';
 import { fetchImage, searchSettings } from './js/paxabay-api';
-import SimpleLightbox from 'simplelightbox';
-import 'simplelightbox/dist/simple-lightbox.min.css';
 
 refs.searchForm.addEventListener('submit', handlerSearchButton);
 
@@ -13,7 +11,8 @@ function handlerSearchButton(event) {
   currentPage = 1;
   totalPage = 1;
 
-  const searchText = event.target.searchtext.value.trim();
+  const searchText = event.target.searchtext.value.trim().toLowerCase();
+
   if (!searchText) {
     handlerError('outdata');
     return;
@@ -27,21 +26,18 @@ function handlerSearchButton(event) {
 
   fetchImage()
     .then(image => {
-      refs.loader.classList.remove('loader');
       totalPage = Math.ceil(image.totalHits / searchSettings.per_page);
 
       if (totalPage === 0) {
         handlerError('nodata');
         return;
       }
-
-      refs.gallery.insertAdjacentHTML('beforeend', renderCard(image.hits));
-      galleryBigImage.refresh();
+      addImage(image.hits);
 
       if (totalPage > currentPage) {
         currentPage += 1;
         refs.loadmore.style.setProperty('--lmb-dispay', `block`);
-        pagination();
+        loadMoreImage();
       }
     })
 
@@ -52,28 +48,17 @@ function handlerSearchButton(event) {
     .finally(refs.searchForm.reset());
 }
 
-function pagination() {
+function loadMoreImage() {
   refs.loadmore.addEventListener('click', () => {
     refs.loader.classList.add('loader');
     searchSettings.page = currentPage;
     fetchImage()
       .then(image => {
-        refs.loader.classList.remove('loader');
-        refs.gallery.insertAdjacentHTML('beforeend', renderCard(image.hits));
-        galleryBigImage.refresh();
-
-        const heightImageCard = document
-          .querySelector('.card')
-          .getBoundingClientRect().height;
-
-        window.scrollBy({
-          left: 0,
-          top: Math.ceil(heightImageCard * 2),
-          behavior: 'smooth',
-        });
+        addImage(image.hits);
+        scrollCard();
       })
       .catch(error => {
-        refs.loadmore.classList.remove('loader');
+        refs.loader.classList.remove('loader');
         handlerError(error);
       });
 
@@ -85,11 +70,3 @@ function pagination() {
     }
   });
 }
-
-const galleryBigImage = new SimpleLightbox('.gallery a', {
-  captionDelay: 250,
-  overlayOpacity: 0.8,
-  scrollZoom: false,
-});
-
-galleryBigImage.on('show.simplelightbox', function () {});

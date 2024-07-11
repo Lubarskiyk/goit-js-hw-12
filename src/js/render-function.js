@@ -1,5 +1,15 @@
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
+
+const galleryBigImage = new SimpleLightbox('.gallery a', {
+  captionDelay: 250,
+  overlayOpacity: 0.8,
+  scrollZoom: false,
+});
+
+galleryBigImage.on('show.simplelightbox', function () {});
 
 iziToast.settings({
   timeout: 2500,
@@ -19,7 +29,7 @@ export const refs = {
   loadmore: document.querySelector('.loadmore-button'),
 };
 
-export function renderCard(imageData) {
+function renderCard(imageData) {
   return imageData
     .map(
       el =>
@@ -79,7 +89,20 @@ export function handlerError(error) {
   }
 }
 
+export function scrollCard() {
+  const heightImageCard = document
+    .querySelector('.card')
+    .getBoundingClientRect().height;
+
+  window.scrollBy({
+    left: 0,
+    top: Math.ceil(heightImageCard * 2),
+    behavior: 'smooth',
+  });
+}
+
 export function addImage(image) {
+  refs.loader.classList.remove('loader');
   refs.gallery.insertAdjacentHTML('beforeend', renderCard(image));
   galleryBigImage.refresh();
 }
