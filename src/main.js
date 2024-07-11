@@ -36,7 +36,7 @@ function handlerSearchButton(event) {
 
       if (totalPage > currentPage) {
         currentPage += 1;
-        refs.loadmore.style.setProperty('--lmb-dispay', `block`);
+        //   refs.loadmore.style.setProperty('--lmb-dispay', `block`);
         loadMoreImage();
       }
     })
@@ -49,6 +49,7 @@ function handlerSearchButton(event) {
 }
 
 function loadMoreImage() {
+  refs.loadmore.style.setProperty('--lmb-dispay', `block`);
   refs.loadmore.addEventListener('click', () => {
     refs.loader.classList.add('loader');
     searchSettings.page = currentPage;
