@@ -14,6 +14,5 @@ export const searchSettings = {
 
 export async function fetchImage() {
   const response = await axios.get('/', { params: searchSettings });
-  console.log(response.data);
   return response.data;
 }

@@ -70,10 +70,16 @@ export function handlerError(error) {
       });
       break;
     default:
+      console.log(error);
       iziToast.error({
         title: 'Error',
         message: 'Щось пішло не так. Ми працюемо над вирішенням питання!',
       });
       break;
   }
+}
+
+export function addImage(image) {
+  refs.gallery.insertAdjacentHTML('beforeend', renderCard(image));
+  galleryBigImage.refresh();
 }

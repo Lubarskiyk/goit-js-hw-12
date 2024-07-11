@@ -1,6 +1,5 @@
 import { renderCard, refs, handlerError } from './js/render-function';
 import { fetchImage, searchSettings } from './js/paxabay-api';
-
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
@@ -30,6 +29,7 @@ function handlerSearchButton(event) {
     .then(image => {
       refs.loader.classList.remove('loader');
       totalPage = Math.ceil(image.totalHits / searchSettings.per_page);
+
       if (totalPage === 0) {
         handlerError('nodata');
         return;
@@ -40,6 +40,7 @@ function handlerSearchButton(event) {
 
       if (totalPage > currentPage) {
         currentPage += 1;
+        refs.loadmore.style.setProperty('--lmb-dispay', `block`);
         pagination();
       }
     })
@@ -60,6 +61,16 @@ function pagination() {
         refs.loader.classList.remove('loader');
         refs.gallery.insertAdjacentHTML('beforeend', renderCard(image.hits));
         galleryBigImage.refresh();
+
+        const heightImageCard = document
+          .querySelector('.card')
+          .getBoundingClientRect().height;
+
+        window.scrollBy({
+          left: 0,
+          top: Math.ceil(heightImageCard * 2),
+          behavior: 'smooth',
+        });
       })
       .catch(error => {
         refs.loadmore.classList.remove('loader');
@@ -67,7 +78,7 @@ function pagination() {
       });
 
     if (totalPage === currentPage) {
-      console.log('vse');
+      refs.loadmore.style.setProperty('--lmb-dispay', `none`);
       return;
     } else {
       currentPage += 1;
